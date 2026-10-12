@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>About Us | Hilton KPI Dashboard</title>
+    <style>
+      :root {
+        --navy: #102b46;
+        --blue: #1769aa;
+        --cyan: #55b9d1;
+        --gold: #d7a64a;
+        --ink: #1c2d3d;
+        --muted: #637589;
+        --line: #e1e9ef;
+        --paper: #f4f7fa;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        font-size: 16px;
+      }
+      .wrap {
+        max-width: 1480px;
+        margin: auto;
+        padding: 24px 40px 52px;
+      }
+      .hero {
+        border-radius: 22px;
+        padding: 36px 40px;
+        color: white;
+        background: linear-gradient(115deg, #102b46, #174e76);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero:after {
+        content: "H";
+        position: absolute;
+        right: 36px;
+        top: -65px;
+        font:
+          700 270px Georgia,
+          serif;
+        color: #ffffff0c;
+      }
+      .eyebrow {
+        font-size: 13px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #a9d7e7;
+        font-weight: 750;
+      }
+      .hero h1 {
+        font:
+          500 43px Georgia,
+          serif;
+        margin: 10px 0;
+      }
+      .hero p {
+        max-width: 760px;
+        color: #e1edf5;
+        line-height: 1.65;
+        font-size: 17px;
+        margin: 0;
+      }
+      .tagline {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 22px;
+      }
+      .tagline span {
+        border: 1px solid #ffffff40;
+        border-radius: 99px;
+        padding: 8px 13px;
+        font-size: 13px;
+        color: #e5f1f8;
+      }
+      .intro {
+        margin: 27px 2px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 20px;
+      }
+      .intro h2,
+      .company h2 {
+        font:
+          500 28px Georgia,
+          serif;
+        color: var(--navy);
+        margin: 0;
+      }
+      .intro p {
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 17px;
+      }
+      .card {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 21px 21px 20px;
+        box-shadow: 0 6px 20px #153b5510;
+      }
+      .profile {
+        width: 112px;
+        height: 112px;
+        border-radius: 50%;
+        margin: 0 auto 16px;
+        display: grid;
+        place-items: center;
+        background: #e9f4f7;
+        overflow: hidden;
+        border: 4px solid #fff;
+        box-shadow: 0 0 0 1px #dbe7ee;
+      }
+      .profile {
+        position: relative;
+      }
+      .profile svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .profile img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        z-index: 1;
+      }
+      .role {
+        display: block;
+        margin: 0 auto 10px;
+        width: max-content;
+        max-width: 100%;
+        text-align: center;
+        padding: 6px 10px;
+        border-radius: 99px;
+        background: #e8f4f7;
+        color: #176d82;
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.04em;
+      }
+      .card h3 {
+        text-align: center;
+        color: var(--navy);
+        font-size: 19px;
+        margin: 0 0 4px;
+      }
+      .sub {
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+        margin: 0 0 17px;
+      }
+      .label {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #7d8b99;
+        margin: 15px 0 5px;
+      }
+      .card p.copy {
+        font-size: 14px;
+        line-height: 1.55;
+        margin: 0;
+        color: #405266;
+      }
+      .learn {
+        margin-top: 16px;
+        border-top: 1px solid var(--line);
+        padding-top: 13px;
+      }
+      .learn .label {
+        color: #a57a2c;
+        margin-top: 0;
+      }
+      .company {
+        margin-top: 22px;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 24px 27px;
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 28px;
+      }
+      .company p {
+        font-size: 15px;
+        line-height: 1.65;
+        color: #475a6c;
+        margin: 9px 0 0;
+      }
+      .company .thesis {
+        background: #f1f7fa;
+        border-left: 4px solid var(--cyan);
+        border-radius: 0 12px 12px 0;
+        padding: 18px 20px;
+        color: var(--navy);
+        font:
+          500 19px/1.55 Georgia,
+          serif;
+        align-self: center;
+      }
+      .footer {
+        font-size: 12px;
+        color: #7c8b99;
+        text-align: center;
+        margin-top: 20px;
+      }
+      .page-switch {
+        display: flex;
+        width: max-content;
+        margin: 0 auto 16px;
+        padding: 4px;
+        border: 1px solid #dce6ee;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 3px 12px #173b5410;
+      }
+      .page-switch a {
+        padding: 9px 20px;
+        border-radius: 999px;
+        color: #526477;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+        transition: 0.18s;
+      }
+      .page-switch a:hover {
+        color: #102b46;
+        background: #eff5f8;
+      }
+      .page-switch a.selected {
+        color: #fff;
+        background: #1769aa;
+        box-shadow: 0 2px 7px #1769aa35;
+      }
+      @media (max-width: 1000px) {
+        .wrap {
+          padding: 20px;
+        }
+        .cards {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .company {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 620px) {
+        .wrap {
+          padding: 12px;
+        }
+        .hero {
+          padding: 23px;
+        }
+        .hero h1 {
+          font-size: 35px;
+        }
+        .cards {
+          grid-template-columns: 1fr;
+        }
+        .card {
+          padding: 21px;
+        }
+        .intro {
+          display: block;
+        }
+        .intro h2,
+        .company h2 {
+          font-size: 25px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <nav class="page-switch" aria-label="Page navigation">
+        <a class="selected" aria-current="page" href="about-us.html"
+          >About Us</a
+        ><a href="live-kpi-dashboard.html">Dashboard</a>
+      </nav>
+      <header class="hero">
+        <div class="eyebrow">Hilton · Value & KPIs</div>
+        <h1>About our team</h1>
+        <p>
+          Four teammates brought together metric design, public data, and
+          dashboard building to examine how Hilton’s transformation is showing
+          up in the business.
+        </p>
+        <div class="tagline">
+          <span>ISM 6930</span
+          ><span>Digital Business Transformation Foundations</span
+          ><span>Group activity · Live KPI Dashboard</span>
+        </div>
+      </header>
+      <div class="intro">
+        <div>
+          <h2>Meet the members</h2>
+          <p>
+            Each role connects a strategic question to evidence and a clear
+            visual story.
+          </p>
+        </div>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <div class="profile">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="60" fill="#e4f7e9" />
+              <path d="M15 120c3-25 18-38 45-38s42 13 45 38" fill="#262e33" />
+              <path d="M47 78h26v22H47z" fill="#d08b5b" />
+              <ellipse cx="60" cy="54" rx="26" ry="31" fill="#d08b5b" />
+              <path
+                d="M34 52c-2-25 8-39 27-39 20 0 29 14 25 37-8-3-15-10-18-17-8 10-20 16-34 16z"
+                fill="#4a312c"
+              />
+              <path
+                d="M44 52q7-5 13 0m7 0q7-5 13 0"
+                fill="none"
+                stroke="#49332b"
+                stroke-width="3"
+              />
+              <circle cx="50" cy="59" r="2" fill="#26323b" />
+              <circle cx="70" cy="59" r="2" fill="#26323b" />
+              <path
+                d="M53 70q7 6 14 0"
+                fill="none"
+                stroke="#8b4d42"
+                stroke-width="2.5"
+              />
+              <path d="M45 93h30l14 27H31z" fill="#536a78" />
+              <path d="M55 89h10l8 12-13 10-13-10z" fill="#fff" /></svg
+            ><img
+              src="https://api.dicebear.com/9.x/avataaars/svg?seed=MemberD&top=shortFlat&hairColor=2c1b18&skinColor=614335&style=circle&eyebrows=default&eyes=default&mouth=smile&accessoriesProbability=0&facialHairProbability=0&clothing=blazerAndShirt&clothesColor=262e33&backgroundType=solid&backgroundColor=e4f7e9"
+              alt="Profile avatar for Andre Barrett"
+              loading="lazy"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+          <span class="role">METRIC SELECTOR</span>
+          <h3>Andre Barrett</h3>
+          <div class="sub">Member A</div>
+          <div class="label">Contribution</div>
+          <p class="copy">
+            Helped select the Hilton KPIs and explain how loyalty, hotel growth,
+            and financial results fit the transformation story.
+          </p>
+          <div class="learn">
+            <div class="label">What I learned</div>
+            <p class="copy">
+              A useful KPI set connects early signals to business outcomes.
+            </p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="profile">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="60" fill="#e4f7e9" />
+              <path d="M15 120c3-25 18-38 45-38s42 13 45 38" fill="#262e33" />
+              <path d="M47 78h26v22H47z" fill="#d08b5b" />
+              <ellipse cx="60" cy="54" rx="26" ry="31" fill="#d08b5b" />
+              <path
+                d="M33 60c-5-29 6-47 28-47 22 0 33 18 26 48l-5 19c-6-9-9-19-9-33-11 7-24 9-36 6 0 12-1 19-5 27z"
+                fill="#2c1b18"
+              />
+              <path
+                d="M43 52q7-5 13 0m8 0q7-5 13 0"
+                fill="none"
+                stroke="#49332b"
+                stroke-width="3"
+              />
+              <circle cx="50" cy="59" r="2" fill="#26323b" />
+              <circle cx="70" cy="59" r="2" fill="#26323b" />
+              <path
+                d="M53 70q7 6 14 0"
+                fill="none"
+                stroke="#8b4d42"
+                stroke-width="2.5"
+              />
+              <path d="M45 93h30l14 27H31z" fill="#536a78" />
+              <path d="M55 89h10l8 12-13 10-13-10z" fill="#fff" /></svg
+            ><img
+              src="https://api.dicebear.com/9.x/avataaars/svg?seed=MemberA&top=straight01&hairColor=4a312c&skinColor=d08b5b&style=circle&eyebrows=default&eyes=default&mouth=smile&accessoriesProbability=0&facialHairProbability=0&clothing=blazerAndShirt&clothesColor=262e33&backgroundType=solid&backgroundColor=e4f7e9"
+              alt="Profile avatar for Shaikh Raisa Afreen"
+              loading="lazy"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+          <span class="role">METRIC SELECTOR</span>
+          <h3>Shaikh Raisa Afreen</h3>
+          <div class="sub">Member A</div>
+          <div class="label">Contribution</div>
+          <p class="copy">
+            Worked on the KPI rationale, choosing measures that show both Honors
+            engagement and Hilton’s operating performance.
+          </p>
+          <div class="learn">
+            <div class="label">What I learned</div>
+            <p class="copy">
+              Metrics need context before they can support a decision.
+            </p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="profile">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="60" fill="#e4f7e9" />
+              <path d="M15 120c3-25 18-38 45-38s42 13 45 38" fill="#262e33" />
+              <path d="M47 78h26v22H47z" fill="#614335" />
+              <ellipse cx="60" cy="54" rx="26" ry="31" fill="#614335" />
+              <path
+                d="M33 53c-2-25 9-40 28-40 19 0 29 15 26 40l-5 26c-7-8-10-17-10-32-9 8-22 11-36 8 0 10-1 17-5 24z"
+                fill="#2c1b18"
+              />
+              <path
+                d="M43 52q7-5 13 0m8 0q7-5 13 0"
+                fill="none"
+                stroke="#30221d"
+                stroke-width="3"
+              />
+              <circle cx="50" cy="59" r="2" fill="#26323b" />
+              <circle cx="70" cy="59" r="2" fill="#26323b" />
+              <path
+                d="M53 70q7 6 14 0"
+                fill="none"
+                stroke="#8b4d42"
+                stroke-width="2.5"
+              />
+              <path d="M45 93h30l14 27H31z" fill="#536a78" />
+              <path d="M55 89h10l8 12-13 10-13-10z" fill="#fff" /></svg
+            ><img
+              src="https://api.dicebear.com/9.x/avataaars/svg?seed=MemberB&top=straight02&hairColor=2c1b18&skinColor=d08b5b&style=circle&eyebrows=default&eyes=default&mouth=smile&accessoriesProbability=0&facialHairProbability=0&clothing=blazerAndShirt&clothesColor=262e33&backgroundType=solid&backgroundColor=e4f7e9"
+              alt="Profile avatar for Tonima Ahmed"
+              loading="lazy"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+          <span class="role" style="background: #edf0fa; color: #485e91"
+            >DATA ANALYST</span
+          >
+          <h3>Tonima Ahmed</h3>
+          <div class="sub">Member B</div>
+          <div class="label">Contribution</div>
+          <p class="copy">
+            Sourced and checked Hilton’s public disclosures, assembled the
+            2022–2025 data, and identified key shifts and comparability limits.
+          </p>
+          <div class="learn">
+            <div class="label">What I learned</div>
+            <p class="copy">
+              Public data becomes stronger when assumptions and limits are
+              visible.
+            </p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="profile">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="60" fill="#e4f7e9" />
+              <path d="M15 120c3-25 18-38 45-38s42 13 45 38" fill="#262e33" />
+              <path d="M47 78h26v22H47z" fill="#d08b5b" />
+              <ellipse cx="60" cy="54" rx="26" ry="31" fill="#d08b5b" />
+              <path
+                d="M34 53c-3-25 9-40 27-40 20 0 30 16 26 40-5-10-12-17-21-20-8 10-18 15-32 16z"
+                fill="#4a312c"
+              />
+              <path
+                d="M36 44c-6 24-4 39 5 48m43-50c7 23 5 38-4 50"
+                fill="none"
+                stroke="#4a312c"
+                stroke-width="5"
+              />
+              <path
+                d="M43 52q7-5 13 0m8 0q7-5 13 0"
+                fill="none"
+                stroke="#49332b"
+                stroke-width="3"
+              />
+              <circle cx="50" cy="59" r="2" fill="#26323b" />
+              <circle cx="70" cy="59" r="2" fill="#26323b" />
+              <path
+                d="M53 70q7 6 14 0"
+                fill="none"
+                stroke="#8b4d42"
+                stroke-width="2.5"
+              />
+              <path d="M45 93h30l14 27H31z" fill="#536a78" />
+              <path d="M55 89h10l8 12-13 10-13-10z" fill="#fff" /></svg
+            ><img
+              src="https://api.dicebear.com/9.x/avataaars/svg?seed=MemberC&top=bob&hairColor=4a312c&skinColor=d08b5b&style=circle&eyebrows=default&eyes=default&mouth=smile&accessoriesProbability=0&facialHairProbability=0&clothing=blazerAndShirt&clothesColor=262e33&backgroundType=solid&backgroundColor=e4f7e9"
+              alt="Profile avatar for Urja Panta"
+              loading="lazy"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+          <span class="role" style="background: #edf5ee; color: #39735e"
+            >DASHBOARD BUILDER</span
+          >
+          <h3>Urja Panta</h3>
+          <div class="sub">Member C</div>
+          <div class="label">Contribution</div>
+          <p class="copy">
+            Built the dashboard to display all six KPIs, compare baseline and
+            current results, and explain the major inflection points.
+          </p>
+          <div class="learn">
+            <div class="label">What I learned</div>
+            <p class="copy">
+              A chart needs labels and explanation to become a management tool.
+            </p>
+          </div>
+        </article>
+      </div>
+      <section class="company">
+        <div>
+          <h2>Our company & assignment</h2>
+          <p>
+            Hilton Worldwide Holdings is a global hotel company with an
+            asset-light model, a large loyalty program, and a growing pipeline
+            of managed and franchised hotels. Its transformation story includes
+            using digital services and Hilton Honors to strengthen the guest
+            relationship while expanding the network.
+          </p>
+          <p>
+            For this assignment, we used six public KPIs from Hilton’s
+            disclosures to look for signs of value creation. Together they track
+            loyalty reach, member stays, hotel performance, network growth,
+            future room supply, and earnings.
+          </p>
+        </div>
+        <div class="thesis">
+          Our question: Is Hilton turning stronger loyalty and a larger hotel
+          network into durable operating and financial value?
+        </div>
+      </section>
+      <div class="footer">
+        Hilton Live KPI Dashboard · ISM 6930 · Andre Barrett, Shaikh Raisa
+        Afreen, Tonima Ahmed & Urja Panta
+      </div>
+    </main>
+  </body>
+</html>
