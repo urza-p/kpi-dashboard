@@ -1,60 +1,1083 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hilton | Live KPI Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Hilton | Live KPI Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+    <style>
+      :root {
+        --navy: #102b46;
+        --blue: #1769aa;
+        --cyan: #55b9d1;
+        --gold: #d7a64a;
+        --ink: #1c2d3d;
+        --muted: #6b7b8c;
+        --line: #e5ebf1;
+        --paper: #f4f7fa;
+        --green: #167c62;
+        --red: #b64b49;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        color: var(--ink);
+      }
+      .wrap {
+        max-width: 1400px;
+        margin: auto;
+        padding: 30px 36px 48px;
+      }
+      .hero {
+        background: linear-gradient(115deg, #102b46, #174e76);
+        border-radius: 20px;
+        padding: 30px 34px;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero:after {
+        content: "H";
+        position: absolute;
+        right: 34px;
+        top: -45px;
+        font-family: Georgia, serif;
+        font-size: 240px;
+        color: #ffffff0d;
+        font-weight: 700;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #a9d7e7;
+        font-weight: 750;
+      }
+      .hero h1 {
+        font:
+          500 35px Georgia,
+          serif;
+        margin: 10px 0 8px;
+        letter-spacing: -0.02em;
+      }
+      .thesis {
+        max-width: 820px;
+        color: #e1edf5;
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0;
+      }
+      .meta {
+        display: flex;
+        gap: 9px;
+        margin-top: 22px;
+        flex-wrap: wrap;
+      }
+      .pill {
+        border: 1px solid #ffffff40;
+        border-radius: 999px;
+        padding: 7px 11px;
+        color: #e5f1f8;
+        font-size: 11px;
+      }
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        margin: 29px 2px 14px;
+      }
+      .section-head h2 {
+        margin: 0;
+        font:
+          500 22px Georgia,
+          serif;
+        color: var(--navy);
+      }
+      .section-head p {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .legend {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        padding: 17px 18px 14px;
+        box-shadow: 0 4px 15px #183b5510;
+        min-width: 0;
+      }
+      .card.wide {
+        grid-column: span 2;
+      }
+      .card-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: flex-start;
+      }
+      .card h3 {
+        font-size: 13px;
+        margin: 0;
+        color: var(--navy);
+        font-weight: 730;
+      }
+      .badge {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        border-radius: 99px;
+        padding: 5px 7px;
+        background: #e9f5f8;
+        color: #1d7387;
+        white-space: nowrap;
+        font-weight: 750;
+      }
+      .badge.lag {
+        background: #f0f2f5;
+        color: #68798a;
+      }
+      .metric {
+        font-size: 22px;
+        font-weight: 760;
+        color: var(--navy);
+        margin: 12px 0 0;
+        letter-spacing: -0.04em;
+      }
+      .delta {
+        font-size: 11px;
+        color: var(--green);
+        font-weight: 650;
+        margin-left: 6px;
+        letter-spacing: 0;
+      }
+      .desc {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .chartbox {
+        height: 180px;
+        margin-top: 10px;
+        position: relative;
+      }
+      .card.wide .chartbox {
+        height: 194px;
+      }
+      .insight {
+        border-top: 1px solid var(--line);
+        padding-top: 9px;
+        margin-top: 7px;
+        color: #526477;
+        font-size: 10px;
+        line-height: 1.5;
+      }
+      .insight strong {
+        color: var(--navy);
+      }
+      .summary {
+        margin-top: 23px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        padding: 17px 18px;
+      }
+      .summary h2 {
+        font:
+          500 20px Georgia,
+          serif;
+        margin: 0 0 12px;
+        color: var(--navy);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+      }
+      th {
+        text-align: left;
+        color: var(--muted);
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        padding: 9px 8px;
+        border-bottom: 1px solid var(--line);
+      }
+      td {
+        padding: 9px 8px;
+        border-bottom: 1px solid #eff2f5;
+      }
+      tr:last-child td {
+        border: 0;
+      }
+      .pos {
+        color: var(--green);
+        font-weight: 700;
+      }
+      .caveat {
+        margin-top: 12px;
+        padding: 11px 13px;
+        border-radius: 10px;
+        background: #fff8e9;
+        color: #715b31;
+        font-size: 10px;
+        line-height: 1.55;
+      }
+      .sources {
+        margin-top: 23px;
+        background: #102b46;
+        border-radius: 15px;
+        color: #dce8f0;
+        padding: 19px 22px;
+      }
+      .sources h2 {
+        font:
+          500 20px Georgia,
+          serif;
+        margin: 0 0 10px;
+        color: white;
+      }
+      .sources p {
+        font-size: 10px;
+        line-height: 1.6;
+        margin: 5px 0;
+        color: #bfd0dc;
+      }
+      .sources a {
+        color: #a9d7e7;
+      }
+      .source-list {
+        margin: 8px 0;
+        padding-left: 22px;
+      }
+      .source-list li {
+        font-size: 13px;
+        line-height: 1.65;
+        margin: 8px 0;
+        color: #bfd0dc;
+      }
+      .source-list strong {
+        color: #fff;
+      }
+      .note-ref {
+        color: inherit;
+        text-decoration: none;
+        font-weight: 800;
+        margin-left: 2px;
+      }
+      .note-ref:hover {
+        text-decoration: underline;
+      }
+      .revpar-card .chartbox {
+        height: 285px;
+      }
+      .foot {
+        margin-top: 15px;
+        font-size: 9px;
+        color: #7b8996;
+        line-height: 1.5;
+      }
+      .callout {
+        color: #ffe2a4;
+      }
+      .error {
+        display: none;
+        background: #fff0f0;
+        color: #922;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 12px;
+      }
+      @media (max-width: 950px) {
+        .wrap {
+          padding: 20px;
+        }
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .card.wide {
+          grid-column: span 2;
+        }
+      }
+      @media (max-width: 620px) {
+        .wrap {
+          padding: 12px;
+        }
+        .hero {
+          padding: 23px;
+        }
+        .hero h1 {
+          font-size: 29px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .card.wide {
+          grid-column: auto;
+        }
+        .section-head {
+          display: block;
+        }
+        .legend {
+          margin-top: 7px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <nav class="page-switch" aria-label="Page navigation">
+        <a href="about-us.html">About Us</a
+        ><a class="selected" aria-current="page" href="index.html">Dashboard</a>
+      </nav>
+      <header class="hero">
+        <div class="eyebrow">Transformation performance · FY2022–FY2025</div>
+        <h1>Hilton | Live KPI Dashboard</h1>
+        <p class="thesis">
+          Hilton is turning a larger loyalty base and hotel pipeline into
+          stronger performance and earnings.
+        </p>
+        <div class="meta">
+          <span class="pill">NYSE: HLT</span
+          ><span class="pill">6 indicators · 2 leading / 4 lagging</span
+          ><span class="pill">Public disclosures · annual data</span>
+        </div>
+      </header>
+      <div class="section-head">
+        <div>
+          <h2>Transformation scorecard</h2>
+          <p>Four-year view. Latest results compared with FY2022.</p>
+        </div>
+        <div class="legend">Blue = value outcome · Teal = forward signal</div>
+      </div>
+      <div class="grid">
+        <section class="card">
+          <div class="card-top">
+            <h3>Honors membership</h3>
+            <span class="badge">Leading</span>
+          </div>
+          <div class="metric">243M <span class="delta">+60% vs ’22</span></div>
+          <div class="desc">Members, millions</div>
+          <div class="chartbox"><canvas id="members"></canvas></div>
+          <div class="insight">
+            <strong>Demand pool:</strong> scale creates reach for app and member
+            services, but membership alone does not prove digital use.
+          </div>
+        </section>
+        <section class="card">
+          <div class="card-top">
+            <h3>Honors share of system occupancy</h3>
+            <span class="badge lag">Lagging</span>
+          </div>
+          <div class="metric">67% <span class="delta">+5 pts vs ’22</span></div>
+          <div class="desc">
+            Share of occupied rooms attributable to Honors members
+          </div>
+          <div class="chartbox"><canvas id="occupancy"></canvas></div>
+          <div class="insight">
+            <strong>Conversion signal:</strong> the member base is contributing
+            a growing share of stays, though this is not a direct app adoption
+            measure.
+          </div>
+        </section>
+        <section class="card revpar-card">
+          <div class="card-top">
+            <h3>System-wide RevPAR</h3>
+            <span class="badge lag">Lagging</span>
+          </div>
+          <div class="metric">
+            $114.39
+            <span class="delta" style="color: var(--red)">−1.0% vs ’24</span>
+          </div>
+          <div class="desc">Reported U.S. dollars per available room</div>
+          <div class="chartbox"><canvas id="revpar"></canvas></div>
+          <div class="insight">
+            <strong>2025 slowdown:</strong> comparable currency-neutral RevPAR
+            growth eased to 0.4% from 2.7% in 2024 as softer inbound and
+            business travel constrained U.S. performance.
+          </div>
+        </section>
+        <section class="card">
+          <div class="card-top">
+            <h3>Net unit growth</h3>
+            <span class="badge lag">Lagging</span>
+          </div>
+          <div class="metric">
+            6.7% <span class="delta">+2.0 pts vs ’22</span>
+          </div>
+          <div class="desc">Annual growth in system rooms, net</div>
+          <div class="chartbox"><canvas id="nug"></canvas></div>
+          <div class="insight">
+            <strong>2024 step-up:</strong> growth rose to 7.3%, including 83,000
+            net rooms added, about 19,400 from strategic partner properties.
+          </div>
+        </section>
+        <section class="card">
+          <div class="card-top">
+            <h3>Development pipeline</h3>
+            <span class="badge">Leading</span>
+          </div>
+          <div class="metric">
+            520.5K <span class="delta">+25% vs ’22</span>
+          </div>
+          <div class="desc">Rooms in pipeline, thousands</div>
+          <div class="chartbox"><canvas id="pipeline"></canvas></div>
+          <div class="insight">
+            <strong>Forward visibility:</strong> owner commitments rose each
+            year, but pipeline rooms are not completed rooms and may not all
+            open.
+          </div>
+        </section>
+        <section class="card">
+          <div class="card-top">
+            <h3>Adjusted EBITDA</h3>
+            <span class="badge lag">Lagging</span>
+          </div>
+          <div class="metric">
+            $3.73B <span class="delta">+43% vs ’22</span>
+          </div>
+          <div class="desc">Reported adjusted EBITDA, USD billions</div>
+          <div class="chartbox"><canvas id="ebitda"></canvas></div>
+          <div class="insight">
+            <strong>Financial outcome:</strong> earnings rose with recovery and
+            scale; this series cannot isolate the portion caused by digital
+            transformation.
+          </div>
+        </section>
+      </div>
+      <section class="summary">
+        <h2>Latest vs. baseline</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Measure</th>
+              <th>FY2022</th>
+              <th>FY2025</th>
+              <th>Change</th>
+              <th>Read-through</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Honors membership</td>
+              <td>152M</td>
+              <td>243M</td>
+              <td class="pos">+60%</td>
+              <td>Expanding loyalty reach</td>
+            </tr>
+            <tr>
+              <td>Honors occupancy share</td>
+              <td>62%</td>
+              <td>67%</td>
+              <td class="pos">+5 pts</td>
+              <td>More stays from members</td>
+            </tr>
+            <tr>
+              <td>System-wide RevPAR</td>
+              <td>$101.90</td>
+              <td>$114.39</td>
+              <td class="pos">
+                +12.3%<a
+                  class="note-ref"
+                  href="#revpar-note"
+                  aria-label="See RevPAR comparability note"
+                  >*</a
+                >
+              </td>
+              <td>Nominal increase; use comparable growth for direction</td>
+            </tr>
+            <tr>
+              <td>Net unit growth</td>
+              <td>4.7%</td>
+              <td>6.7%</td>
+              <td class="pos">+2.0 pts</td>
+              <td>Faster system expansion</td>
+            </tr>
+            <tr>
+              <td>Development pipeline</td>
+              <td>416.4K</td>
+              <td>520.5K</td>
+              <td class="pos">+25%</td>
+              <td>More potential future rooms</td>
+            </tr>
+            <tr>
+              <td>Adjusted EBITDA</td>
+              <td>$2.60B</td>
+              <td>$3.73B</td>
+              <td class="pos">+43%</td>
+              <td>Stronger earnings, mixed drivers</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="caveat" id="revpar-note">
+          <strong>Comparability note:</strong> RevPAR dollar values may use
+          different hotel sets and currency bases each year. For like-for-like
+          context, Hilton’s comparable currency-neutral growth was 12.6% in
+          2023, 2.7% in 2024, and 0.4% in 2025.
+        </div>
+      </section>
+      <section class="sources">
+        <h2>Sources & method</h2>
+        <p>
+          Each chart uses the Hilton disclosure listed below. Fiscal years ended
+          December 31; figures are reported values unless noted.
+        </p>
+        <ul class="source-list">
+          <li>
+            <strong>Honors membership:</strong> Hilton 10-K, “Business
+            Overview,”
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-23-000036/hlt-20221231.htm"
+              >FY2022 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-24-000027/hlt-20231231.htm"
+              >FY2023 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-25-000008/hlt-20241231.htm"
+              >FY2024 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000007/hlt-20251231.htm"
+              >FY2025 10-K</a
+            >.
+          </li>
+          <li>
+            <strong>Honors share of system occupancy:</strong> Hilton 2025 and
+            2026 proxy statements, company performance summaries; GWCCA board
+            presentation, Sept. 25, 2025, p. 64.
+            <a
+              href="https://www.sec.gov/Archives/edgar/data/1585689/000158568925000078/hlt-20250403.htm"
+              >2025 proxy</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000023/hlt-20260401.htm"
+              >2026 proxy</a
+            >
+            ·
+            <a
+              href="https://www.gwcca.org/wp-content/uploads/2025/09/09-25-2025-Board-Presentation_Morning-Session.pdf"
+              >GWCCA presentation</a
+            >.
+          </li>
+          <li>
+            <strong>System-wide RevPAR:</strong> Hilton annual reports,
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-23-000036/hlt-20221231.htm"
+              >FY2022 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-24-000027/hlt-20231231.htm"
+              >FY2023 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-25-000008/hlt-20241231.htm"
+              >FY2024 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000007/hlt-20251231.htm"
+              >FY2025 10-K</a
+            >. The FY2023 +12.6% recovery is in FY2023 10-K, p. 50; FY2025
+            deceleration context is in FY2025 10-K, p. 44.
+          </li>
+          <li>
+            <strong>Net unit growth:</strong> Hilton annual reports,
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-23-000036/hlt-20221231.htm"
+              >FY2022 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-24-000027/hlt-20231231.htm"
+              >FY2023 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-25-000008/hlt-20241231.htm"
+              >FY2024 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000007/hlt-20251231.htm"
+              >FY2025 10-K</a
+            >. The 2024 additions and partner-room figures are in FY2024 10-K,
+            p. 4.
+          </li>
+          <li>
+            <strong>Development pipeline rooms:</strong> Hilton annual reports,
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-23-000036/hlt-20221231.htm"
+              >FY2022 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-24-000027/hlt-20231231.htm"
+              >FY2023 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-25-000008/hlt-20241231.htm"
+              >FY2024 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000007/hlt-20251231.htm"
+              >FY2025 10-K</a
+            >.
+          </li>
+          <li>
+            <strong>Adjusted EBITDA:</strong> Hilton annual reports,
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-23-000036/hlt-20221231.htm"
+              >FY2022 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-24-000027/hlt-20231231.htm"
+              >FY2023 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-25-000008/hlt-20241231.htm"
+              >FY2024 10-K</a
+            >
+            ·
+            <a
+              href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000007/hlt-20251231.htm"
+              >FY2025 10-K</a
+            >; reported USD millions converted to USD billions for display.
+          </li>
+        </ul>
+        <p>
+          <span class="callout">Inflection points:</span> FY2023 RevPAR
+          recovery, FY2024 net unit growth step-up, and FY2025 RevPAR slowdown
+          are annotated on their charts with the period, change, and cited
+          cause.
+        </p>
+        <p>
+          Membership and occupancy share are rounded as reported. No estimates
+          are introduced.
+        </p>
+      </section>
+      <div id="error" class="error">
+        Charts could not load. Check that the browser has internet access for
+        the Chart.js CDN.
+      </div>
+      <div class="foot">
+        Based on Member A and B’s work. Causes are Hilton’s reported context,
+        not proof that digital alone drove results.
+      </div>
+    </main>
+    <script>
+      const DATA = {
+        years: ["FY2022", "FY2023", "FY2024", "FY2025"],
+        members: [152, 180, 211, 243],
+        occupancy: [62, 64, 66, 67],
+        revpar: [101.9, 113.9, 115.09, 114.39],
+        nug: [4.7, 4.9, 7.3, 6.7],
+        pipeline: [416.4, 462.4, 498.6, 520.5],
+        ebitda: [2.599, 3.089, 3.429, 3.725],
+      };
+      const C = {
+        blue: "#1769aa",
+        cyan: "#55b9d1",
+        gold: "#d7a64a",
+        navy: "#102b46",
+        grid: "#e9eef3",
+        red: "#b64b49",
+      };
+      if (!window.Chart) {
+        document.getElementById("error").style.display = "block";
+      } else {
+        const annotationPlugin =
+          window.ChartAnnotation || window["chartjs-plugin-annotation"];
+        if (annotationPlugin) Chart.register(annotationPlugin);
+        const base = {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: "index" },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "#102b46",
+              padding: 10,
+              displayColors: false,
+              titleFont: { size: 12 },
+              bodyFont: { size: 13 },
+            },
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: "#728294", font: { size: 11 } },
+            },
+            y: {
+              beginAtZero: false,
+              grid: { color: C.grid },
+              border: { display: false },
+              ticks: { color: "#728294", font: { size: 11 }, maxTicksLimit: 5 },
+            },
+          },
+        };
+        function line(
+          id,
+          vals,
+          {
+            color = C.blue,
+            format = (v) => v,
+            fill = false,
+            annotations = {},
+            min,
+            max,
+          } = {},
+        ) {
+          const options = structuredClone(base);
+          options.scales.y.ticks.callback = (v) => format(v);
+          if (min !== undefined) options.scales.y.min = min;
+          if (max !== undefined) options.scales.y.max = max;
+          options.plugins.annotation = { annotations };
+          new Chart(document.getElementById(id), {
+            type: "line",
+            data: {
+              labels: DATA.years,
+              datasets: [
+                {
+                  data: vals,
+                  borderColor: color,
+                  backgroundColor: fill ? color + "20" : color,
+                  borderWidth: 2.5,
+                  pointRadius: 4,
+                  pointHoverRadius: 6,
+                  pointBackgroundColor: "#fff",
+                  pointBorderWidth: 2,
+                  tension: 0.32,
+                  fill,
+                },
+              ],
+            },
+            options,
+          });
+        }
+        function bars(
+          id,
+          vals,
+          { color = C.cyan, format = (v) => v, annotations = {} } = {},
+        ) {
+          const options = structuredClone(base);
+          options.scales.y.ticks.callback = (v) => format(v);
+          options.plugins.annotation = { annotations };
+          new Chart(document.getElementById(id), {
+            type: "bar",
+            data: {
+              labels: DATA.years,
+              datasets: [
+                {
+                  data: vals,
+                  backgroundColor: vals.map((_, i) =>
+                    i === vals.length - 1 ? C.blue : color,
+                  ),
+                  borderRadius: 5,
+                  maxBarThickness: 34,
+                },
+              ],
+            },
+            options,
+          });
+        }
+        line("members", DATA.members, {
+          color: C.cyan,
+          format: (v) => v + "M",
+          fill: true,
+          min: 130,
+        });
+        line("occupancy", DATA.occupancy, {
+          color: C.blue,
+          format: (v) => v + "%",
+          min: 59,
+          max: 70,
+        });
+        line("revpar", DATA.revpar, {
+          color: C.gold,
+          format: (v) => "$" + Number(v).toFixed(0),
+          min: 95,
+          annotations: {
+            recovery: {
+              type: "line",
+              xMin: "FY2023",
+              xMax: "FY2023",
+              borderColor: C.blue,
+              borderWidth: 1.5,
+              borderDash: [4, 4],
+              label: {
+                display: true,
+                content: [
+                  "FY2023: comparable RevPAR +12.6%.",
+                  "Higher rates and occupancy, returning",
+                  "business/group travel and fewer",
+                  "restrictions drove the recovery.",
+                ],
+                position: "start",
+                xAdjust: 24,
+                yAdjust: -8,
+                backgroundColor: "#eef6fc",
+                color: "#174e76",
+                font: { size: 9 },
+                padding: 5,
+              },
+            },
+            slow: {
+              type: "line",
+              xMin: "FY2025",
+              xMax: "FY2025",
+              borderColor: C.red,
+              borderWidth: 1.5,
+              borderDash: [4, 4],
+              label: {
+                display: true,
+                content: [
+                  "FY2025: growth slowed 2.7% → 0.4%.",
+                  "Lower inbound international and weaker",
+                  "U.S. business travel limited growth.",
+                ],
+                position: "end",
+                xAdjust: -48,
+                yAdjust: 8,
+                backgroundColor: "#fff3f1",
+                color: "#8b3938",
+                font: { size: 9 },
+                padding: 5,
+              },
+            },
+          },
+        });
+        bars("nug", DATA.nug, {
+          format: (v) => v + "%",
+          annotations: {
+            expansion: {
+              type: "line",
+              xMin: "FY2024",
+              xMax: "FY2024",
+              borderColor: C.gold,
+              borderWidth: 1.5,
+              borderDash: [4, 4],
+              label: {
+                display: true,
+                content: [
+                  "FY2024: NUG rose 4.9% → 7.3%.",
+                  "Hilton added 83K net rooms,",
+                  "including 19.4K partner rooms.",
+                ],
+                position: "start",
+                xAdjust: -20,
+                yAdjust: -8,
+                backgroundColor: "#fff8e9",
+                color: "#715b31",
+                font: { size: 9 },
+                padding: 5,
+              },
+            },
+          },
+        });
+        line("pipeline", DATA.pipeline, {
+          color: C.cyan,
+          format: (v) => v + "K",
+          fill: true,
+          min: 390,
+        });
+        bars("ebitda", DATA.ebitda, {
+          color: "#9bb8d0",
+          format: (v) => "$" + Number(v).toFixed(1) + "B",
+        });
+      }
+    </script>
+  </body>
+</html>
 <style>
-:root{--navy:#102b46;--blue:#1769aa;--cyan:#55b9d1;--gold:#d7a64a;--ink:#1c2d3d;--muted:#6b7b8c;--line:#e5ebf1;--paper:#f4f7fa;--green:#167c62;--red:#b64b49}*{box-sizing:border-box}body{margin:0;background:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}.wrap{max-width:1400px;margin:auto;padding:30px 36px 48px}.hero{background:linear-gradient(115deg,#102b46,#174e76);border-radius:20px;padding:30px 34px;color:#fff;position:relative;overflow:hidden}.hero:after{content:"H";position:absolute;right:34px;top:-45px;font-family:Georgia,serif;font-size:240px;color:#ffffff0d;font-weight:700}.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a9d7e7;font-weight:750}.hero h1{font:500 35px Georgia,serif;margin:10px 0 8px;letter-spacing:-.02em}.thesis{max-width:820px;color:#e1edf5;font-size:14px;line-height:1.6;margin:0}.meta{display:flex;gap:9px;margin-top:22px;flex-wrap:wrap}.pill{border:1px solid #ffffff40;border-radius:999px;padding:7px 11px;color:#e5f1f8;font-size:11px}.section-head{display:flex;align-items:end;justify-content:space-between;margin:29px 2px 14px}.section-head h2{margin:0;font:500 22px Georgia,serif;color:var(--navy)}.section-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.legend{font-size:11px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px 18px 14px;box-shadow:0 4px 15px #183b5510;min-width:0}.card.wide{grid-column:span 2}.card-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.card h3{font-size:13px;margin:0;color:var(--navy);font-weight:730}.badge{font-size:9px;text-transform:uppercase;letter-spacing:.08em;border-radius:99px;padding:5px 7px;background:#e9f5f8;color:#1d7387;white-space:nowrap;font-weight:750}.badge.lag{background:#f0f2f5;color:#68798a}.metric{font-size:22px;font-weight:760;color:var(--navy);margin:12px 0 0;letter-spacing:-.04em}.delta{font-size:11px;color:var(--green);font-weight:650;margin-left:6px;letter-spacing:0}.desc{font-size:10px;color:var(--muted);margin-top:2px}.chartbox{height:180px;margin-top:10px;position:relative}.card.wide .chartbox{height:194px}.insight{border-top:1px solid var(--line);padding-top:9px;margin-top:7px;color:#526477;font-size:10px;line-height:1.5}.insight strong{color:var(--navy)}.summary{margin-top:23px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px 18px}.summary h2{font:500 20px Georgia,serif;margin:0 0 12px;color:var(--navy)}table{width:100%;border-collapse:collapse;font-size:11px}th{text-align:left;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.09em;padding:9px 8px;border-bottom:1px solid var(--line)}td{padding:9px 8px;border-bottom:1px solid #eff2f5}tr:last-child td{border:0}.pos{color:var(--green);font-weight:700}.caveat{margin-top:12px;padding:11px 13px;border-radius:10px;background:#fff8e9;color:#715b31;font-size:10px;line-height:1.55}.sources{margin-top:23px;background:#102b46;border-radius:15px;color:#dce8f0;padding:19px 22px}.sources h2{font:500 20px Georgia,serif;margin:0 0 10px;color:white}.sources p{font-size:10px;line-height:1.6;margin:5px 0;color:#bfd0dc}.sources a{color:#a9d7e7}.source-list{margin:8px 0;padding-left:22px}.source-list li{font-size:13px;line-height:1.65;margin:8px 0;color:#bfd0dc}.source-list strong{color:#fff}.note-ref{color:inherit;text-decoration:none;font-weight:800;margin-left:2px}.note-ref:hover{text-decoration:underline}.revpar-card .chartbox{height:285px}.foot{margin-top:15px;font-size:9px;color:#7b8996;line-height:1.5}.callout{color:#ffe2a4}.error{display:none;background:#fff0f0;color:#922;padding:12px;border-radius:8px;margin-top:12px}@media(max-width:950px){.wrap{padding:20px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card.wide{grid-column:span 2}}@media(max-width:620px){.wrap{padding:12px}.hero{padding:23px}.hero h1{font-size:29px}.grid{grid-template-columns:1fr}.card.wide{grid-column:auto}.section-head{display:block}.legend{margin-top:7px}}
-</style></head>
-<body><main class="wrap">
-<nav class="page-switch" aria-label="Page navigation"><a href="about-us.html">About Us</a><a class="selected" aria-current="page" href="index(1).html">Dashboard</a></nav><header class="hero"><div class="eyebrow">Transformation performance · FY2022–FY2025</div><h1>Hilton | Live KPI Dashboard</h1><p class="thesis">Hilton is turning a larger loyalty base and hotel pipeline into stronger performance and earnings.</p><div class="meta"><span class="pill">NYSE: HLT</span><span class="pill">6 indicators · 2 leading / 4 lagging</span><span class="pill">Public disclosures · annual data</span></div></header>
-<div class="section-head"><div><h2>Transformation scorecard</h2><p>Four-year view. Latest results compared with FY2022.</p></div><div class="legend">Blue = value outcome · Teal = forward signal</div></div>
-<div class="grid">
-<section class="card"><div class="card-top"><h3>Honors membership</h3><span class="badge">Leading</span></div><div class="metric">243M <span class="delta">+60% vs ’22</span></div><div class="desc">Members, millions</div><div class="chartbox"><canvas id="members"></canvas></div><div class="insight"><strong>Demand pool:</strong> scale creates reach for app and member services, but membership alone does not prove digital use.</div></section>
-<section class="card"><div class="card-top"><h3>Honors share of system occupancy</h3><span class="badge lag">Lagging</span></div><div class="metric">67% <span class="delta">+5 pts vs ’22</span></div><div class="desc">Share of occupied rooms attributable to Honors members</div><div class="chartbox"><canvas id="occupancy"></canvas></div><div class="insight"><strong>Conversion signal:</strong> the member base is contributing a growing share of stays, though this is not a direct app adoption measure.</div></section>
-<section class="card revpar-card"><div class="card-top"><h3>System-wide RevPAR</h3><span class="badge lag">Lagging</span></div><div class="metric">$114.39 <span class="delta" style="color:var(--red)">−1.0% vs ’24</span></div><div class="desc">Reported U.S. dollars per available room</div><div class="chartbox"><canvas id="revpar"></canvas></div><div class="insight"><strong>2025 slowdown:</strong> comparable currency-neutral RevPAR growth eased to 0.4% from 2.7% in 2024 as softer inbound and business travel constrained U.S. performance.</div></section>
-<section class="card"><div class="card-top"><h3>Net unit growth</h3><span class="badge lag">Lagging</span></div><div class="metric">6.7% <span class="delta">+2.0 pts vs ’22</span></div><div class="desc">Annual growth in system rooms, net</div><div class="chartbox"><canvas id="nug"></canvas></div><div class="insight"><strong>2024 step-up:</strong> growth rose to 7.3%, including 83,000 net rooms added, about 19,400 from strategic partner properties.</div></section>
-<section class="card"><div class="card-top"><h3>Development pipeline</h3><span class="badge">Leading</span></div><div class="metric">520.5K <span class="delta">+25% vs ’22</span></div><div class="desc">Rooms in pipeline, thousands</div><div class="chartbox"><canvas id="pipeline"></canvas></div><div class="insight"><strong>Forward visibility:</strong> owner commitments rose each year, but pipeline rooms are not completed rooms and may not all open.</div></section>
-<section class="card"><div class="card-top"><h3>Adjusted EBITDA</h3><span class="badge lag">Lagging</span></div><div class="metric">$3.73B <span class="delta">+43% vs ’22</span></div><div class="desc">Reported adjusted EBITDA, USD billions</div><div class="chartbox"><canvas id="ebitda"></canvas></div><div class="insight"><strong>Financial outcome:</strong> earnings rose with recovery and scale; this series cannot isolate the portion caused by digital transformation.</div></section>
-</div>
-<section class="summary"><h2>Latest vs. baseline</h2><table><thead><tr><th>Measure</th><th>FY2022</th><th>FY2025</th><th>Change</th><th>Read-through</th></tr></thead><tbody>
-<tr><td>Honors membership</td><td>152M</td><td>243M</td><td class="pos">+60%</td><td>Expanding loyalty reach</td></tr><tr><td>Honors occupancy share</td><td>62%</td><td>67%</td><td class="pos">+5 pts</td><td>More stays from members</td></tr><tr><td>System-wide RevPAR</td><td>$101.90</td><td>$114.39</td><td class="pos">+12.3%<a class="note-ref" href="#revpar-note" aria-label="See RevPAR comparability note">*</a></td><td>Nominal increase; use comparable growth for direction</td></tr><tr><td>Net unit growth</td><td>4.7%</td><td>6.7%</td><td class="pos">+2.0 pts</td><td>Faster system expansion</td></tr><tr><td>Development pipeline</td><td>416.4K</td><td>520.5K</td><td class="pos">+25%</td><td>More potential future rooms</td></tr><tr><td>Adjusted EBITDA</td><td>$2.60B</td><td>$3.73B</td><td class="pos">+43%</td><td>Stronger earnings, mixed drivers</td></tr>
-</tbody></table><div class="caveat" id="revpar-note"><strong>Comparability note:</strong> RevPAR dollar values may use different hotel sets and currency bases each year. For like-for-like context, Hilton’s comparable currency-neutral growth was 12.6% in 2023, 2.7% in 2024, and 0.4% in 2025.</div></section>
-<section class="sources"><h2>Sources & method</h2>
-<p>Each chart uses the Hilton disclosure listed below. Fiscal years ended December 31; figures are reported values unless noted.</p>
-<ul class="source-list">
-<li><strong>Honors membership:</strong> Hilton 10-K, “Business Overview,” <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-23-000036/hlt-20221231.htm">FY2022 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-24-000027/hlt-20231231.htm">FY2023 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-25-000008/hlt-20241231.htm">FY2024 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000007/hlt-20251231.htm">FY2025 10-K</a>.</li>
-<li><strong>Honors share of system occupancy:</strong> Hilton 2025 and 2026 proxy statements, company performance summaries; GWCCA board presentation, Sept. 25, 2025, p. 64. <a href="https://www.sec.gov/Archives/edgar/data/1585689/000158568925000078/hlt-20250403.htm">2025 proxy</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000023/hlt-20260401.htm">2026 proxy</a> · <a href="https://www.gwcca.org/wp-content/uploads/2025/09/09-25-2025-Board-Presentation_Morning-Session.pdf">GWCCA presentation</a>.</li>
-<li><strong>System-wide RevPAR:</strong> Hilton annual reports, <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-23-000036/hlt-20221231.htm">FY2022 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-24-000027/hlt-20231231.htm">FY2023 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-25-000008/hlt-20241231.htm">FY2024 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000007/hlt-20251231.htm">FY2025 10-K</a>. The FY2023 +12.6% recovery is in FY2023 10-K, p. 50; FY2025 deceleration context is in FY2025 10-K, p. 44.</li>
-<li><strong>Net unit growth:</strong> Hilton annual reports, <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-23-000036/hlt-20221231.htm">FY2022 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-24-000027/hlt-20231231.htm">FY2023 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-25-000008/hlt-20241231.htm">FY2024 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000007/hlt-20251231.htm">FY2025 10-K</a>. The 2024 additions and partner-room figures are in FY2024 10-K, p. 4.</li>
-<li><strong>Development pipeline rooms:</strong> Hilton annual reports, <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-23-000036/hlt-20221231.htm">FY2022 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-24-000027/hlt-20231231.htm">FY2023 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-25-000008/hlt-20241231.htm">FY2024 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000007/hlt-20251231.htm">FY2025 10-K</a>.</li>
-<li><strong>Adjusted EBITDA:</strong> Hilton annual reports, <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-23-000036/hlt-20221231.htm">FY2022 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-24-000027/hlt-20231231.htm">FY2023 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-25-000008/hlt-20241231.htm">FY2024 10-K</a> · <a href="https://ir.hilton.com/sec-filings/all-sec-filings/content/0001585689-26-000007/hlt-20251231.htm">FY2025 10-K</a>; reported USD millions converted to USD billions for display.</li>
-</ul>
-<p><span class="callout">Inflection points:</span> FY2023 RevPAR recovery, FY2024 net unit growth step-up, and FY2025 RevPAR slowdown are annotated on their charts with the period, change, and cited cause.</p>
-<p>Membership and occupancy share are rounded as reported. No estimates are introduced.</p></section>
-<div id="error" class="error">Charts could not load. Check that the browser has internet access for the Chart.js CDN.</div><div class="foot">Based on Member A and B’s work. Causes are Hilton’s reported context, not proof that digital alone drove results.</div>
-</main>
-<script>
-const DATA={years:['FY2022','FY2023','FY2024','FY2025'],members:[152,180,211,243],occupancy:[62,64,66,67],revpar:[101.90,113.90,115.09,114.39],nug:[4.7,4.9,7.3,6.7],pipeline:[416.4,462.4,498.6,520.5],ebitda:[2.599,3.089,3.429,3.725]};
-const C={blue:'#1769aa',cyan:'#55b9d1',gold:'#d7a64a',navy:'#102b46',grid:'#e9eef3',red:'#b64b49'};
-if(!window.Chart){document.getElementById('error').style.display='block'}else{
-const annotationPlugin=window.ChartAnnotation||window['chartjs-plugin-annotation'];if(annotationPlugin)Chart.register(annotationPlugin);
-const base={responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#102b46',padding:10,displayColors:false,titleFont:{size:12},bodyFont:{size:13}}},scales:{x:{grid:{display:false},ticks:{color:'#728294',font:{size:11}}},y:{beginAtZero:false,grid:{color:C.grid},border:{display:false},ticks:{color:'#728294',font:{size:11},maxTicksLimit:5}}}};
-function line(id,vals,{color=C.blue,format=(v)=>v,fill=false,annotations={},min,max}={}){const options=structuredClone(base);options.scales.y.ticks.callback=(v)=>format(v);if(min!==undefined)options.scales.y.min=min;if(max!==undefined)options.scales.y.max=max;options.plugins.annotation={annotations};new Chart(document.getElementById(id),{type:'line',data:{labels:DATA.years,datasets:[{data:vals,borderColor:color,backgroundColor:fill?color+'20':color,borderWidth:2.5,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#fff',pointBorderWidth:2,tension:.32,fill}]},options});}
-function bars(id,vals,{color=C.cyan,format=(v)=>v,annotations={}}={}){const options=structuredClone(base);options.scales.y.ticks.callback=(v)=>format(v);options.plugins.annotation={annotations};new Chart(document.getElementById(id),{type:'bar',data:{labels:DATA.years,datasets:[{data:vals,backgroundColor:vals.map((_,i)=>i===vals.length-1?C.blue:color),borderRadius:5,maxBarThickness:34}]},options});}
-line('members',DATA.members,{color:C.cyan,format:v=>v+'M',fill:true,min:130});
-line('occupancy',DATA.occupancy,{color:C.blue,format:v=>v+'%',min:59,max:70});
-line('revpar',DATA.revpar,{color:C.gold,format:v=>'$'+Number(v).toFixed(0),min:95,annotations:{recovery:{type:'line',xMin:'FY2023',xMax:'FY2023',borderColor:C.blue,borderWidth:1.5,borderDash:[4,4],label:{display:true,content:['FY2023: comparable RevPAR +12.6%.','Higher rates and occupancy, returning','business/group travel and fewer','restrictions drove the recovery.'],position:'start',xAdjust:24,yAdjust:-8,backgroundColor:'#eef6fc',color:'#174e76',font:{size:9},padding:5}},slow:{type:'line',xMin:'FY2025',xMax:'FY2025',borderColor:C.red,borderWidth:1.5,borderDash:[4,4],label:{display:true,content:['FY2025: growth slowed 2.7% → 0.4%.','Lower inbound international and weaker','U.S. business travel limited growth.'],position:'end',xAdjust:-48,yAdjust:8,backgroundColor:'#fff3f1',color:'#8b3938',font:{size:9},padding:5}}}});
-bars('nug',DATA.nug,{format:v=>v+'%',annotations:{expansion:{type:'line',xMin:'FY2024',xMax:'FY2024',borderColor:C.gold,borderWidth:1.5,borderDash:[4,4],label:{display:true,content:['FY2024: NUG rose 4.9% → 7.3%.','Hilton added 83K net rooms,','including 19.4K partner rooms.'],position:'start',xAdjust:-20,yAdjust:-8,backgroundColor:'#fff8e9',color:'#715b31',font:{size:9},padding:5}}}});
-line('pipeline',DATA.pipeline,{color:C.cyan,format:v=>v+'K',fill:true,min:390});
-bars('ebitda',DATA.ebitda,{color:'#9bb8d0',format:v=>'$'+Number(v).toFixed(1)+'B'});
-}
-</script></body></html>
-<style>
-/* readability pass */
-body{font-size:16px}.wrap{max-width:1480px;padding:24px 40px 52px}.page-switch{display:flex;width:max-content;margin:0 auto 16px;padding:4px;border:1px solid #dce6ee;border-radius:999px;background:#fff;box-shadow:0 3px 12px #173b5410}.page-switch a{padding:9px 20px;border-radius:999px;color:#526477;text-decoration:none;font-size:14px;font-weight:700;transition:.18s}.page-switch a:hover{color:#102b46;background:#eff5f8}.page-switch a.selected{color:#fff;background:#1769aa;box-shadow:0 2px 7px #1769aa35}.hero{padding:36px 40px}.eyebrow{font-size:13px}.hero h1{font-size:42px}.thesis{font-size:17px;line-height:1.65}.pill{font-size:13px;padding:8px 13px}.section-head h2{font-size:27px}.section-head p{font-size:15px}.legend{font-size:13px}.grid{gap:18px}.card{padding:22px 22px 18px}.card h3{font-size:16px}.badge{font-size:11px;padding:6px 9px}.metric{font-size:28px}.desc{font-size:13px}.chartbox{height:210px}.card.wide .chartbox{height:220px}.insight{font-size:13px;line-height:1.55;padding-top:12px}.summary{padding:22px}.summary h2{font-size:25px}table{font-size:14px}th{font-size:12px;padding:11px 10px}td{padding:12px 10px}.caveat{font-size:13px;padding:14px 16px}.sources{padding:24px 26px}.sources h2{font-size:25px}.sources p{font-size:13px;line-height:1.65}.foot{font-size:13px;line-height:1.6}.chartbox canvas{font-size:13px}
-@media(max-width:950px){.wrap{padding:20px}.hero h1{font-size:36px}.card{padding:18px}}
-@media(max-width:620px){.wrap{padding:12px}.hero{padding:23px}.hero h1{font-size:31px}.thesis{font-size:15px}.card{padding:18px}.section-head h2{font-size:24px}}
+  /* readability pass */
+  body {
+    font-size: 16px;
+  }
+  .wrap {
+    max-width: 1480px;
+    padding: 24px 40px 52px;
+  }
+  .page-switch {
+    display: flex;
+    width: max-content;
+    margin: 0 auto 16px;
+    padding: 4px;
+    border: 1px solid #dce6ee;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 3px 12px #173b5410;
+  }
+  .page-switch a {
+    padding: 9px 20px;
+    border-radius: 999px;
+    color: #526477;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.18s;
+  }
+  .page-switch a:hover {
+    color: #102b46;
+    background: #eff5f8;
+  }
+  .page-switch a.selected {
+    color: #fff;
+    background: #1769aa;
+    box-shadow: 0 2px 7px #1769aa35;
+  }
+  .hero {
+    padding: 36px 40px;
+  }
+  .eyebrow {
+    font-size: 13px;
+  }
+  .hero h1 {
+    font-size: 42px;
+  }
+  .thesis {
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  .pill {
+    font-size: 13px;
+    padding: 8px 13px;
+  }
+  .section-head h2 {
+    font-size: 27px;
+  }
+  .section-head p {
+    font-size: 15px;
+  }
+  .legend {
+    font-size: 13px;
+  }
+  .grid {
+    gap: 18px;
+  }
+  .card {
+    padding: 22px 22px 18px;
+  }
+  .card h3 {
+    font-size: 16px;
+  }
+  .badge {
+    font-size: 11px;
+    padding: 6px 9px;
+  }
+  .metric {
+    font-size: 28px;
+  }
+  .desc {
+    font-size: 13px;
+  }
+  .chartbox {
+    height: 210px;
+  }
+  .card.wide .chartbox {
+    height: 220px;
+  }
+  .insight {
+    font-size: 13px;
+    line-height: 1.55;
+    padding-top: 12px;
+  }
+  .summary {
+    padding: 22px;
+  }
+  .summary h2 {
+    font-size: 25px;
+  }
+  table {
+    font-size: 14px;
+  }
+  th {
+    font-size: 12px;
+    padding: 11px 10px;
+  }
+  td {
+    padding: 12px 10px;
+  }
+  .caveat {
+    font-size: 13px;
+    padding: 14px 16px;
+  }
+  .sources {
+    padding: 24px 26px;
+  }
+  .sources h2 {
+    font-size: 25px;
+  }
+  .sources p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .foot {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .chartbox canvas {
+    font-size: 13px;
+  }
+  @media (max-width: 950px) {
+    .wrap {
+      padding: 20px;
+    }
+    .hero h1 {
+      font-size: 36px;
+    }
+    .card {
+      padding: 18px;
+    }
+  }
+  @media (max-width: 620px) {
+    .wrap {
+      padding: 12px;
+    }
+    .hero {
+      padding: 23px;
+    }
+    .hero h1 {
+      font-size: 31px;
+    }
+    .thesis {
+      font-size: 15px;
+    }
+    .card {
+      padding: 18px;
+    }
+    .section-head h2 {
+      font-size: 24px;
+    }
+  }
 </style>
