@@ -406,7 +406,7 @@
           </div>
           <div class="metric">
             $114.39
-            <span class="delta" style="color: var(--red)">−1.0% vs ’24</span>
+            <span class="delta">+0.4% comparable vs ’24</span>
           </div>
           <div class="desc">Reported U.S. dollars per available room</div>
           <div class="chartbox"><canvas id="revpar"></canvas></div>
@@ -433,7 +433,7 @@
         </section>
         <section class="card">
           <div class="card-top">
-            <h3>Development pipeline</h3>
+            <h3>Development pipeline rooms</h3>
             <span class="badge">Leading</span>
           </div>
           <div class="metric">
@@ -466,10 +466,17 @@
       </div>
       <section class="summary">
         <h2>Latest vs. baseline</h2>
+        <p class="desc" style="margin: -4px 0 12px">
+          FY2022 is used as the baseline because it is the first year in our
+          dataset, not because it reflects steady-state performance — Hilton
+          was still in pandemic recovery that year, so gains since FY2022
+          partly reflect continued recovery alongside the transformation.
+        </p>
         <table>
           <thead>
             <tr>
               <th>Measure</th>
+              <th>Type</th>
               <th>FY2022</th>
               <th>FY2025</th>
               <th>Change</th>
@@ -479,13 +486,15 @@
           <tbody>
             <tr>
               <td>Honors membership</td>
+              <td>Leading</td>
               <td>152M</td>
               <td>243M</td>
               <td class="pos">+60%</td>
               <td>Expanding loyalty reach</td>
             </tr>
             <tr>
-              <td>Honors occupancy share</td>
+              <td>Honors share of system occupancy</td>
+              <td>Lagging</td>
               <td>62%</td>
               <td>67%</td>
               <td class="pos">+5 pts</td>
@@ -493,6 +502,7 @@
             </tr>
             <tr>
               <td>System-wide RevPAR</td>
+              <td>Lagging</td>
               <td>$101.90</td>
               <td>$114.39</td>
               <td class="pos">
@@ -507,13 +517,15 @@
             </tr>
             <tr>
               <td>Net unit growth</td>
+              <td>Lagging</td>
               <td>4.7%</td>
               <td>6.7%</td>
               <td class="pos">+2.0 pts</td>
               <td>Faster system expansion</td>
             </tr>
             <tr>
-              <td>Development pipeline</td>
+              <td>Development pipeline rooms</td>
+              <td>Leading</td>
               <td>416.4K</td>
               <td>520.5K</td>
               <td class="pos">+25%</td>
@@ -521,6 +533,7 @@
             </tr>
             <tr>
               <td>Adjusted EBITDA</td>
+              <td>Lagging</td>
               <td>$2.60B</td>
               <td>$3.73B</td>
               <td class="pos">+43%</td>
@@ -788,10 +801,12 @@
         function bars(
           id,
           vals,
-          { color = C.cyan, format = (v) => v, annotations = {} } = {},
+          { color = C.cyan, format = (v) => v, annotations = {}, min = 0 } = {},
         ) {
           const options = structuredClone(base);
           options.scales.y.ticks.callback = (v) => format(v);
+          options.scales.y.beginAtZero = true;
+          options.scales.y.min = min;
           options.plugins.annotation = { annotations };
           new Chart(document.getElementById(id), {
             type: "bar",
@@ -827,6 +842,7 @@
           color: C.gold,
           format: (v) => "$" + Number(v).toFixed(0),
           min: 95,
+          max: 128,
           annotations: {
             recovery: {
               type: "line",
@@ -838,14 +854,14 @@
               label: {
                 display: true,
                 content: [
-                  "FY2023: comparable RevPAR +12.6%.",
-                  "Higher rates and occupancy, returning",
-                  "business/group travel and fewer",
-                  "restrictions drove the recovery.",
+                  "FY2023: comparable RevPAR grew 12.6%",
+                  "(from a pandemic-depressed FY2022 base)",
+                  "as rates, occupancy, and returning",
+                  "business/group travel recovered.",
                 ],
-                position: "start",
-                xAdjust: 24,
-                yAdjust: -8,
+                position: "end",
+                xAdjust: 28,
+                yAdjust: -6,
                 backgroundColor: "#eef6fc",
                 color: "#174e76",
                 font: { size: 9 },
@@ -862,13 +878,14 @@
               label: {
                 display: true,
                 content: [
-                  "FY2025: growth slowed 2.7% → 0.4%.",
-                  "Lower inbound international and weaker",
-                  "U.S. business travel limited growth.",
+                  "FY2025: comparable RevPAR growth",
+                  "slowed from 2.7% to 0.4% as softer",
+                  "inbound international and weaker U.S.",
+                  "business travel limited gains.",
                 ],
                 position: "end",
-                xAdjust: -48,
-                yAdjust: 8,
+                xAdjust: -56,
+                yAdjust: -6,
                 backgroundColor: "#fff3f1",
                 color: "#8b3938",
                 font: { size: 9 },
@@ -890,9 +907,9 @@
               label: {
                 display: true,
                 content: [
-                  "FY2024: NUG rose 4.9% → 7.3%.",
-                  "Hilton added 83K net rooms,",
-                  "including 19.4K partner rooms.",
+                  "FY2024: NUG rose from 4.9% to 7.3%",
+                  "as Hilton added 83K net rooms,",
+                  "including 19.4K from partner properties.",
                 ],
                 position: "start",
                 xAdjust: -20,
